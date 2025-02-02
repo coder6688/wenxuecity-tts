@@ -59,7 +59,7 @@ def normalize_lang_code(code):
 
 def speak(text, lang=None, volume=80):
     # Enhanced empty check with proper character stripping
-    if not text.strip('\'"""''?!-–— \t\n\r'):  # Fixed string syntax
+    if not text.strip('\'"""''?!-–— \t\n\r'):
         return
     
     try:
@@ -73,35 +73,52 @@ def speak(text, lang=None, volume=80):
             if lang not in ['en', 'zh-cn']:
                 lang = 'zh-cn'
 
-        tts = gTTS(text=text, lang=lang)
-        
-        # Generate audio to memory buffer
-        audio_buffer = io.BytesIO()
-        tts.write_to_fp(audio_buffer)
-        audio_buffer.seek(0)  # Reset buffer position for reading
-        
-        # Get audio duration from memory
-        try:
-            audio = MP3(audio_buffer)
-            duration = audio.info.length
-            audio_buffer.seek(0)  # Reset buffer again for playback
-        except Exception as e:
-            duration = len(text.split()) * 0.3
-        
-        # Split text into words
-        words = text.split()
-        delay = 0 # duration / len(words) if words else 0
-        
-        # Create temporary in-memory file (uses system's temp directory which is often RAM-backed)
-        with tempfile.NamedTemporaryFile(suffix='.mp3', delete=True) as temp_file:
-            temp_file.write(audio_buffer.read())
-            temp_file.flush()  # Ensure all data is written
-            
-            # Convert 0-100 scale to 0.0-1.0 for afplay
-            volume_level = max(0.0, min(1.0, volume / 100))
-            player = subprocess.Popen(['afplay', '-v', str(volume_level), temp_file.name])
-            time.sleep(delay)
-            player.wait()
+        # for windows
+        if os.name == 'nt':
+            try:
+                import win32com.client
+                speaker = win32com.client.Dispatch("SAPI.SpVoice")
+                
+                # Set voice based on language
+                voices = speaker.GetVoices()
+                if lang == 'zh-cn':
+                    # Find Chinese voice
+                    for voice in voices:
+                        if 'Chinese' in voice.GetDescription():
+                            speaker.Voice = voice
+                            break
+                else:
+                    # Default to English voice
+                    for voice in voices:
+                        if 'English' in voice.GetDescription():
+                            speaker.Voice = voice
+                            break
+                
+                # Set volume (0-100)
+                speaker.Volume = volume
+                speaker.Speak(text)
+                
+            except ImportError:
+                # Fallback to using powershell if pywin32 is not installed
+                if lang == 'zh-cn':
+                    # Use Chinese voice in PowerShell
+                    subprocess.run(['powershell', '-Command', 
+                        f'Add-Type -AssemblyName System.speech; $speaker = New-Object System.speech.synthesis.speechSynthesizer; $speaker.SelectVoice("Microsoft Huihui Desktop"); $speaker.Speak("{text}")'], 
+                        check=True)
+                else:
+                    # Use default English voice
+                    subprocess.run(['powershell', '-Command', 
+                        f'Add-Type -AssemblyName System.speech; (New-Object System.speech.synthesis.speechSynthesizer).Speak("{text}")'], 
+                        check=True)
+        else:
+            # Non-Windows systems use gTTS
+            tts = gTTS(text=text, lang=lang)
+            with tempfile.NamedTemporaryFile(suffix='.mp3', delete=True) as temp_file:
+                tts.write_to_fp(temp_file)
+                temp_file.flush()
+                volume_level = max(0.0, min(1.0, volume / 100))
+                player = subprocess.Popen(['afplay', '-v', str(volume_level), temp_file.name])
+                time.sleep(len(text.split()) * 0.3)
         
     except AssertionError:
         print(f"Skipped problematic text: '{text}'")

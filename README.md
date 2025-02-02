@@ -54,16 +54,38 @@ https://github.com/coder6688/wenxuecity-tts/releases/latest
 
 - FastText Model:
   ```bash
-  wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
-  mkdir -p models && mv lid.176.bin models/
+  curl -o models/lid.176.bin https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
   ```
 - First-time Setup
 Download the FastText language model:
   ```
   bash
-  wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
-  mkdir -p models && mv lid.176.bin models/
+  curl -o models/lid.176.bin https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
   ``` 
+
+### Windows Requirements
+
+1. **Chinese Language Support**:
+   - Go to Settings → Time & Language → Language
+   - Add Chinese (Simplified, China) and install the language pack
+   - Under "Text-to-speech", install the Chinese voice
+
+2. **Recommended Voices**:
+   - Microsoft Huihui Desktop
+   - Microsoft Kangkang Desktop
+   - Microsoft Yaoyao Desktop
+
+3. **Optional Python Package**:
+   ```bash
+   pip install pywin32
+   ```
+
+### Checking Installed Voices
+
+To see available voices on Windows, run this PowerShell command:
+```bash
+powershell -Command "Add-Type -AssemblyName System.speech; $voices = [System.speech.synthesis.SpeechSynthesizer]::new().GetInstalledVoices(); $voices.ForEach({ $_.VoiceInfo.Name })"
+```
 
 ## Installation
 
@@ -209,6 +231,12 @@ To help users run the app more easily, let's add a post-install script:
 xattr -d com.apple.quarantine "/Applications/WenxuecityTTS.app" || true
 ```
 
+## Troubleshooting
+
+If Chinese text-to-speech isn't working:
+1. Verify Chinese voices are installed
+2. Check your system's text-to-speech settings
+3. Ensure the language pack is fully downloaded
 
 ## License
 
