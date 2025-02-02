@@ -5,6 +5,9 @@
 
 A PyQt5-based application that converts news articles from Wenxuecity into spoken audio with automatic language detection and seamless article continuation.
 
+### Download Links 
+https://github.com/coder6688/wenxuecity-tts/releases/latest
+
 ![Screenshot](docs/screenshot.png) <!-- Add actual screenshot later -->
 
 ## Features
@@ -176,10 +179,6 @@ gh release create v0.0.1 \
 ```bash
 gh release upload v1.0.0 dist/WenxuecityTTS_UPDATE.dmg
 ```
-
-### Download Links
-Always available at:  
-https://github.com/coder6688/wenxuecity-tts/releases/latest
 
 ## License
 
