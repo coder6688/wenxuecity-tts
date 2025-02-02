@@ -20,3 +20,6 @@ venv/
 *.swp
 *.swo
 .history
+
+# Model files
+models/lid.176.bin

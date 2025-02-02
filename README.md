@@ -54,6 +54,13 @@ A PyQt5-based application that converts news articles from Wenxuecity into spoke
   wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
   mkdir -p models && mv lid.176.bin models/
   ```
+- First-time Setup
+Download the FastText language model:
+  ```
+  bash
+  wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
+  mkdir -p models && mv lid.176.bin models/
+  ``` 
 
 ## Installation
 
