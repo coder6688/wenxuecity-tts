@@ -170,10 +170,10 @@ gh auth login
 
 2. Create a new release:
 ```bash
-gh release create v1.0.0 \
-  --title "Version 1.0.0" \
+gh release create v0.0.1 \
+  --title "Version 0.0.1" \
   --notes "Initial release" \
-  dist/WenxuecityTTS.dmg
+  dist/WenxuecityTTS_YYYYMMDD.dmg
 ```
 
 3. Update existing release:
