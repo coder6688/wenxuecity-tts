@@ -180,6 +180,36 @@ gh release create v0.0.1 \
 gh release upload v1.0.0 dist/WenxuecityTTS_UPDATE.dmg
 ```
 
+## Security Note
+
+When first opening the app, you may see:
+"This app cannot be opened because the developer cannot be verified"
+
+To run unsigned applications:
+
+1. Right-click the application icon
+2. Select "Open" from the context menu
+3. Click "Open" in the security dialog
+
+Alternatively, run this command in Terminal:
+```bash
+xattr -d com.apple.quarantine WenxuecityTTS.app
+```
+
+
+Important Notes:
+- These steps reduce security protections
+- Recommend only for trusted software
+- Users should re-enable protections after installation
+
+To help users run the app more easily, let's add a post-install script:
+```bash:scripts/postinstall
+#!/bin/bash
+# Remove quarantine attribute
+xattr -d com.apple.quarantine "/Applications/WenxuecityTTS.app" || true
+```
+
+
 ## License
 
 Distributed under MIT License. See `LICENSE`
