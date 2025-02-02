@@ -111,15 +111,36 @@ def speak(text, lang=None, volume=80):
                         f'Add-Type -AssemblyName System.speech; (New-Object System.speech.synthesis.speechSynthesizer).Speak("{text}")'], 
                         check=True)
         else:
-            # Non-Windows systems use gTTS
             tts = gTTS(text=text, lang=lang)
+            
+            # Generate audio to memory buffer
+            audio_buffer = io.BytesIO()
+            tts.write_to_fp(audio_buffer)
+            audio_buffer.seek(0)  # Reset buffer position for reading
+            
+            # Get audio duration from memory
+            try:
+                audio = MP3(audio_buffer)
+                duration = audio.info.length
+                audio_buffer.seek(0)  # Reset buffer again for playback
+            except Exception as e:
+                duration = len(text.split()) * 0.3
+            
+            # Split text into words
+            words = text.split()
+            delay = 0 # duration / len(words) if words else 0
+            
+            # Create temporary in-memory file (uses system's temp directory which is often RAM-backed)
             with tempfile.NamedTemporaryFile(suffix='.mp3', delete=True) as temp_file:
-                tts.write_to_fp(temp_file)
-                temp_file.flush()
+                temp_file.write(audio_buffer.read())
+                temp_file.flush()  # Ensure all data is written
+                
+                # Convert 0-100 scale to 0.0-1.0 for afplay
                 volume_level = max(0.0, min(1.0, volume / 100))
                 player = subprocess.Popen(['afplay', '-v', str(volume_level), temp_file.name])
-                time.sleep(len(text.split()) * 0.3)
-        
+                time.sleep(delay)
+                player.wait()
+
     except AssertionError:
         print(f"Skipped problematic text: '{text}'")
     except Exception as e:
