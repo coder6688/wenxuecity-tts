@@ -194,7 +194,12 @@ gh auth login
 gh release create v0.0.1 \
   --title "Version 0.0.1" \
   --notes "Initial release" \
-  dist/WenxuecityTTS_YYYYMMDD.dmg
+  dist/WenxuecityTTS_YYYYMMDD.dmg \
+  dist/WenxuecityTTS_YYYYMMDD.exe
+```
+or use the gh_release.sh script:
+```bash
+./gh_release.sh
 ```
 
 3. Update existing release:
