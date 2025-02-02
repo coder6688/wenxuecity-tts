@@ -287,6 +287,10 @@ class MainWindow(QMainWindow):
 
     def process_and_speak(self):
         """Process the URL and speak the content with timing."""
+        # Reset pause state when starting new speech
+        self.stop_button.setText("Pause")  # Reset text to default
+        self.paused = False  # Clear pause flag
+        
         url = self.url_input.text().strip()
         if not url:
             self.show_message("Please enter a valid URL.")
