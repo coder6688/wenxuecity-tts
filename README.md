@@ -154,10 +154,6 @@ xcrun notarytool submit "dist/WenxuecityTTS.dmg" \
 - Installer package: `dist/WenxuecityTTS_YYYYMMDD.dmg`
 - Build logs: `build/` directory
 
-## License
-
-Distributed under MIT License. See `LICENSE`
-
 ## Distribution
 
 ### Publishing Releases
@@ -184,3 +180,7 @@ gh release upload v1.0.0 dist/WenxuecityTTS_UPDATE.dmg
 ### Download Links
 Always available at:  
 https://github.com/coder6688/wenxuecity-tts/releases/latest
+
+## License
+
+Distributed under MIT License. See `LICENSE`
