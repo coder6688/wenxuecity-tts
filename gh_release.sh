@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Parse command-line arguments with defaults
-VERSION=${1:-"v0.0.3"}                  # First argument: version (default: v0.0.3)
+VERSION=${1:-"v0.0.4"}                  # First argument: version (default: v0.0.3)
 BUILD_DATE=${2:-$(date +"%Y%m%d")}      # Second argument: build date (default: current date)
 
 # Validate date format
@@ -14,7 +14,6 @@ fi
 gh release create ${VERSION} \
   --title "Version ${VERSION}" \
   --notes "Release ${VERSION} (${BUILD_DATE})" \
-  "dist/WenxuecityTTS_${BUILD_DATE}.dmg" \
   "dist/WenxuecityTTS_${BUILD_DATE}.exe"
 
 # Usage examples:
