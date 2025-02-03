@@ -1,3 +1,4 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 
@@ -6,11 +7,17 @@ def get_wenxuecity_news():
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
-    
+
+      # Add proxy configuration
+    proxies = {
+        'http': os.environ.get('HTTP_PROXY'),
+        'https': os.environ.get('HTTPS_PROXY')
+    } if any(os.environ.get(k) for k in ['HTTP_PROXY', 'HTTPS_PROXY']) else None
+   
     articles = []
     
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, proxies=proxies)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.text, 'html.parser')
